@@ -6,9 +6,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ error: "Method not allowed" })
   }
 
-  const apiKey = process.env.KILO_LLM_API_KEY
+  const apiKey = process.env.KILO_LLM_API_KEY || req.body.apiKey
   if (!apiKey) {
-    return res.status(500).json({ error: "KILO_LLM_API_KEY not configured on server" })
+    return res.status(500).json({ error: "KILO_LLM_API_KEY not configured" })
   }
 
   const { message, files } = req.body

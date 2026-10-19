@@ -101,6 +101,7 @@ export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<FileInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -161,6 +162,7 @@ export default function Home() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: input,
+          apiKey,
           files: selectedFiles.map((f) => ({
             originalName: f.originalName,
             size: f.size,
@@ -301,6 +303,25 @@ export default function Home() {
             </select>
             <button className="icon-btn small">+</button>
             <button className="icon-btn small advanced">Advanced</button>
+          </div>
+          <div className="api-key-input">
+            <label htmlFor="api-key" style={{ fontSize: "0.85rem", color: "#888", marginRight: "6px" }}>API Key:</label>
+            <input
+              id="api-key"
+              type="password"
+              placeholder="ใส่ API Key (oc_sk_...)"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              style={{
+                padding: "6px 10px",
+                fontSize: "0.85rem",
+                border: "1px solid #333",
+                borderRadius: "6px",
+                background: "#0f172a",
+                color: "#fff",
+                maxWidth: "220px",
+              }}
+            />
           </div>
         </div>
 
