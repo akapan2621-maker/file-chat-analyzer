@@ -12,6 +12,7 @@ body {
   background: #fafafa;
   color: #111;
   min-height: 100vh;
+  height: auto;
   overflow: auto;
 }
 
