@@ -20,78 +20,11 @@ type Message = {
   files?: FileInfo[];
 };
 
-type UploadedFileMeta = {
-  originalName: string;
-  size: number;
-  type: string;
-  content?: string;
-};
-
-// Mock data to match the reference UI (will be replaced by real API later)
 const MOCK_FILES: FileInfo[] = [
-  {
-    id: "f1",
-    originalName: "optimizer_results.csv",
-    size: 124500,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "12 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f2",
-    originalName: "single_run_trades.csv",
-    size: 98700,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "12 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f3",
-    originalName: "XAUUSD_M5.csv",
-    size: 2456000,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "16 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f4",
-    originalName: "XAUUSD_H4.csv",
-    size: 890000,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "16 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f5",
-    originalName: "XAUUSD_D1.csv",
-    size: 3120000,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "16 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f6",
-    originalName: "XAUUSD_H1.csv",
-    size: 1560000,
-    type: "text/csv",
-    status: "Ready",
-    addedOn: "16 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
-  {
-    id: "f7",
-    originalName: "M1",
-    size: 45000,
-    type: "application/octet-stream",
-    status: "Active",
-    addedOn: "16 days ago",
-    addedBy: "akapan2621@gmail.com",
-  },
+  { id: "f1", originalName: "optimizer_results.csv", size: 124500, type: "text/csv", status: "Ready", addedOn: "12 days ago", addedBy: "akapan2621@gmail.com" },
+  { id: "f2", originalName: "single_run_trades.csv", size: 98700, type: "text/csv", status: "Ready", addedOn: "12 days ago", addedBy: "akapan2621@gmail.com" },
+  { id: "f3", originalName: "XAUUSD_M5.csv", size: 2456000, type: "text/csv", status: "Ready", addedOn: "16 days ago", addedBy: "akapan2621@gmail.com" },
+  { id: "f4", originalName: "XAUUSD_H4.csv", size: 890000, type: "text/csv", status: "Ready", addedOn: "16 days ago", addedBy: "akapan2621@gmail.com" },
 ];
 
 export default function Home() {
@@ -103,14 +36,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [apiKey, setApiKey] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const searchRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Filter files by search
   const [searchQuery, setSearchQuery] = useState("");
+
   const filteredFiles = files.filter(
     (f) =>
       f.originalName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -172,7 +99,10 @@ export default function Home() {
         }),
       });
 
-      if (!resp.ok) throw new Error("Server error");
+      if (!resp.ok) {
+        const errData = await resp.json().catch(() => ({}));
+        throw new Error(errData.error || "Server error");
+      }
 
       const data = await resp.json();
       setMessages((prev) => [
@@ -191,6 +121,10 @@ export default function Home() {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="app-container">
       {/* ============ LEFT PANEL: File Manager ============ */}
@@ -201,9 +135,6 @@ export default function Home() {
             <div className="space-desc">จัดการไฟล์และแชทกับ AI รองรับภาษาไทย</div>
           </div>
           <div className="left-actions">
-            <button className="icon-btn" title="Share">
-              Share
-            </button>
             <button className="icon-btn delete-btn" title="ลบ" onClick={handleDeleteSelected}>
               🗑️
             </button>
@@ -212,7 +143,6 @@ export default function Home() {
 
         <div className="search-bar">
           <input
-            ref={searchRef}
             type="text"
             placeholder="Search by name..."
             value={searchQuery}
@@ -246,11 +176,7 @@ export default function Home() {
                 return (
                   <tr key={file.id} className={`file-row ${isSelected ? "selected" : ""}`}>
                     <td className="col-select">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => handleFileSelect(file)}
-                      />
+                      <input type="checkbox" checked={isSelected} onChange={() => handleFileSelect(file)} />
                     </td>
                     <td className="col-name">
                       <div className="file-icon">
@@ -259,16 +185,12 @@ export default function Home() {
                       <div className="file-name">{file.originalName}</div>
                     </td>
                     <td className="col-status">
-                      <span
-                        className={`status-badge ${file.status.toLowerCase()}`}
-                      >
-                        {file.status}
-                      </span>
+                      <span className={`status-badge ${file.status.toLowerCase()}`}>{file.status}</span>
                     </td>
                     <td className="col-added">{file.addedOn}</td>
                     <td className="col-actions">
                       <button className="icon-btn small" title="ลบ" onClick={() => handleDeleteSelected}>
-                        ...
+                        …
                       </button>
                     </td>
                   </tr>
@@ -305,7 +227,9 @@ export default function Home() {
             <button className="icon-btn small advanced">Advanced</button>
           </div>
           <div className="api-key-input">
-            <label htmlFor="api-key" style={{ fontSize: "0.85rem", color: "#888", marginRight: "6px" }}>API Key:</label>
+            <label htmlFor="api-key" style={{ fontSize: "0.85rem", color: "#888", marginRight: "6px" }}>
+              API Key:
+            </label>
             <input
               id="api-key"
               type="password"
@@ -325,16 +249,12 @@ export default function Home() {
           </div>
         </div>
 
-        {error && (
-          <div className="error-banner">{error}</div>
-        )}
+        {error && <div className="error-banner">{error}</div>}
 
         <div className="messages-container" ref={scrollRef}>
           {messages.map((msg) => (
             <div key={msg.id} className={`message ${msg.role}`}>
-              <div className="message-avatar">
-                {msg.role === "user" ? "👤" : "🤖"}
-              </div>
+              <div className="message-avatar">{msg.role === "user" ? "👤" : "🤖"}</div>
               <div className="message-content">
                 {msg.files?.length && (
                   <div className="attached-files">
@@ -388,7 +308,9 @@ export default function Home() {
               {selectedFiles.map((f, i) => (
                 <span key={i} className="file-chip">
                   {f.originalName}
-                  <span onClick={(e) => { e.stopPropagation(); handleRemoveFile(i); }} className="chip-remove">×</span>
+                  <span onClick={(e) => { e.stopPropagation(); handleRemoveFile(i); }} className="chip-remove">
+                    ×
+                  </span>
                 </span>
               ))}
             </div>
