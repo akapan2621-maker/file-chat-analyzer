@@ -151,7 +151,7 @@ export function LLMSettingsModal({
               className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm focus:ring-2 focus:ring-primary outline-none"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              ตัวอย่าง: https://api.kilocode.ai/v1
+              ตัวอย่าง: https://api.kilo.ai/api/gateway
             </p>
           </div>
 
