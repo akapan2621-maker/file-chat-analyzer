@@ -57,12 +57,15 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
     // Ensure active chat exists
     let active = getActiveChat();
     if (!active || active.id === "new") {
-      const newSession = addChatSession({
+      addChatSession({
         title: input.slice(0, 50) || "แชทใหม่",
         messages: [userMessage],
       });
-      active = newSession;
-      setActiveChatId(active.id);
+      // Find the newly created session
+      active = chatSessions[0];
+      if (active) {
+        setActiveChatId(active.id);
+      }
     } else {
       updateChatSession(active.id, {
         messages: [...(active.messages || []), userMessage],
