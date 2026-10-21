@@ -123,10 +123,10 @@ export function LLMSettingsModal({
                       setBaseUrl(p.defaultBaseUrl);
                     }}
                     className={cn(
-                      "flex flex-col items-start gap-2 p-3 rounded-xl border transition-all",
+                      "flex flex-col items-start gap-2 rounded-xl border p-3 text-left transition-all focus-lux",
                       active
-                        ? "border-primary-500 bg-primary-50 text-primary-600"
-                        : "border-border text-muted-foreground hover:border-border/50"
+                        ? "border-primary bg-primary/10 text-foreground"
+                        : "border-border text-muted-foreground hover:border-primary/40"
                     )}
                   >
                     <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export function LLMSettingsModal({
                 ) : status === "success" ? (
                   <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                 ) : status === "error" ? (
-                  <AlertCircle className="w-4 h-4 text-red-500" />
+                  <AlertCircle className="h-4 w-4 text-destructive" />
                 ) : (
                   <Link className="w-4 h-4 text-muted-foreground" />
                 )}
@@ -270,7 +270,7 @@ export function LLMSettingsModal({
           <button
             onClick={handleSave}
             disabled={!apiKey}
-            className="bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all"
+            className="lux-gradient lux-ink px-5 py-2.5 rounded-xl font-medium transition-all hover:brightness-110 hover:shadow-lg focus-lux disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Save className="w-4 h-4 mr-2" />
             บันทึกการตั้งค่า

@@ -52,24 +52,24 @@ export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 flex items-center justify-center text-white font-bold text-lg">
-            ✨
+          <div className="lux-gradient flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-sm">
+            <Sparkles className="h-4 w-4" />
           </div>
           {!collapsed && (
-            <h1 className="font-bold text-lg tracking-tight text-foreground">
+            <h1 className="lux-gradient-text text-base font-semibold tracking-tight">
               AI Workspace
             </h1>
           )}
         </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 hover:bg-accent rounded-lg transition-colors"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-lux"
           title={collapsed ? "ขยายเมนู" : "ย่อเมนู"}
         >
           {collapsed ? (
-            <ChevronLeft className="w-5 h-5" />
+            <ChevronLeft className="h-4 w-4" />
           ) : (
-            <ChevronLeft className="w-5 h-5" rotate={180} />
+            <ChevronLeft className="h-4 w-4 rotate-180" />
           )}
         </button>
       </div>
@@ -81,13 +81,13 @@ export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
           <button
             onClick={onNewChat}
             className={cn(
-              "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-colors",
+              "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
               activeChatId === "new"
-                ? "bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 text-white"
-                : "hover:bg-secondary text-foreground"
+                ? "lux-gradient lux-ink shadow-sm"
+                : "text-foreground hover:bg-accent"
             )}
           >
-            <MessageCircle className="w-5 h-5" />
+            <MessageCircle className="h-4 w-4" />
             <span className={cn("text-sm font-medium", collapsed && "hidden")}>
               แชทใหม่
             </span>
@@ -206,7 +206,7 @@ export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
       {/* Profile */}
       <div className="px-4 py-4 border-t border-border">
         <div className="flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-secondary transition-colors cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 flex items-center justify-center text-white text-sm font-bold">
+          <div className="lux-gradient lux-ink flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold">
             AP
           </div>
           <div className={cn("flex-1 min-w-0", collapsed && "hidden")}>

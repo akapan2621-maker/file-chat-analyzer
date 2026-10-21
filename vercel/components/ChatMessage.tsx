@@ -13,27 +13,31 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
 
   return (
-    <div className={cn("flex items-start gap-3 mb-6", isUser ? "flex-row-reverse" : "")}>
-      <div className={cn(
-        "w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center",
-        isUser ? "bg-primary text-white" : "bg-secondary"
-      )}>
+    <div className={cn("mb-6 flex items-start gap-3", isUser ? "flex-row-reverse" : "")}>
+      <div
+        className={cn(
+          "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full",
+          isUser
+            ? "lux-gradient lux-ink"
+            : "border border-border bg-muted text-muted-foreground"
+        )}
+      >
         {isUser ? (
-          <UserIcon className="w-4 h-4" />
+          <UserIcon className="h-3.5 w-3.5" />
         ) : (
-          <Bot className="w-4 h-4 text-muted-foreground" />
+          <Bot className="h-3.5 w-3.5" />
         )}
       </div>
 
-      <div className={cn(
-        "max-w-[85%] rounded-xl p-4 whitespace-pre-wrap break-words",
-        isUser
-          ? "bg-primary text-white text-right rounded-tr-none rounded-tl-none"
-          : "bg-card border border-border text-foreground rounded-bl-none rounded-tl-none"
-      )}>
-        <div className="prose prose-sm">
-          {message.content}
-        </div>
+      <div
+        className={cn(
+          "max-w-[85%] whitespace-pre-wrap break-words rounded-2xl px-4 py-3 text-sm leading-relaxed",
+          isUser
+            ? "lux-gradient lux-ink"
+            : "lux-border border border-border bg-card text-foreground"
+        )}
+      >
+        {message.content}
       </div>
     </div>
   );

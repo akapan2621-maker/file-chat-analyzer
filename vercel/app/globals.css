@@ -2,50 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  AI Workspace — "Noir & Gold" theme
+  ---------------------------------------------------------------
+  IMPORTANT: the values below are HSL channel triplets (H S% L%).
+  They MUST keep their % signs. Tailwind wraps them as
+  `hsl(var(--token))`, so a bare number like `250 250 250` would be
+  parsed as H=250 S=250% L=250% -> bright yellow. That bug shipped once
+  and turned the whole UI yellow; keep the % signs.
+*/
 @layer base {
   :root {
-    --background: 250 250 250;
-    --foreground: 15 23 42;
-    --card: 255 255 255;
-    --card-foreground: 15 23 42;
-    --popover: 255 255 255;
-    --popover-foreground: 15 23 42;
-    --primary: 168 85 247;
-    --primary-foreground: 255 255 255;
-    --secondary: 241 245 249;
-    --secondary-foreground: 15 23 42;
-    --muted: 241 245 249;
-    --muted-foreground: 100 116 139;
-    --accent: 241 245 249;
-    --accent-foreground: 15 23 42;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 226 232 240;
-    --input: 226 232 240;
-    --ring: 168 85 247;
-    --radius: 0.75rem;
+    /* Light — warm ivory / graphite, champagne accent */
+    --background: 40 33% 98%;
+    --foreground: 30 12% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 30 12% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 12% 12%;
+
+    --primary: 35 55% 42%;
+    --primary-foreground: 40 40% 98%;
+
+    --secondary: 38 24% 94%;
+    --secondary-foreground: 30 12% 16%;
+
+    --muted: 38 20% 95%;
+    --muted-foreground: 30 8% 38%;
+
+    --accent: 38 30% 92%;
+    --accent-foreground: 30 12% 16%;
+
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 40 40% 98%;
+
+    --border: 36 18% 87%;
+    --input: 36 18% 87%;
+    --ring: 35 55% 42%;
+
+    --gold: 38 52% 52%;
+    --gold-soft: 40 40% 92%;
+
+    --radius: 0.875rem;
   }
 
   .dark {
-    --background: 15 23 42;
-    --foreground: 250 250 250;
-    --card: 15 23 42;
-    --card-foreground: 250 250 250;
-    --popover: 15 23 42;
-    --popover-foreground: 250 250 250;
-    --primary: 168 85 247;
-    --primary-foreground: 255 255 255;
-    --secondary: 30 41 59;
-    --secondary-foreground: 250 250 250;
-    --muted: 30 41 59;
-    --muted-foreground: 148 163 184;
-    --accent: 30 41 59;
-    --accent-foreground: 250 250 250;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 51 65 85;
-    --input: 51 65 85;
-    --ring: 168 85 247;
+    /* Dark — deep charcoal, champagne gold accent */
+    --background: 30 10% 7%;
+    --foreground: 38 24% 92%;
+
+    --card: 30 9% 10%;
+    --card-foreground: 38 24% 92%;
+
+    --popover: 30 9% 10%;
+    --popover-foreground: 38 24% 92%;
+
+    --primary: 38 58% 58%;
+    --primary-foreground: 30 12% 8%;
+
+    --secondary: 30 8% 14%;
+    --secondary-foreground: 38 24% 92%;
+
+    --muted: 30 8% 14%;
+    --muted-foreground: 34 12% 68%;
+
+    --accent: 30 8% 16%;
+    --accent-foreground: 38 24% 92%;
+
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 40 40% 98%;
+
+    --border: 32 10% 19%;
+    --input: 32 10% 19%;
+    --ring: 38 58% 58%;
+
+    --gold: 38 58% 58%;
+    --gold-soft: 32 10% 16%;
   }
 
   * {
@@ -55,18 +89,88 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 0, "curs" 0, "hlig" 0, "liga" 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   html {
     scroll-behavior: smooth;
   }
+
+  /* Refined scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.22);
+    color: hsl(var(--foreground));
+  }
 }
 
-@layer base {
-  * {
-    @apply border-border;
+@layer components {
+  /* Signature champagne-gold gradient used for the brand mark + primary CTA.
+     The mid/lower stops are kept dark enough that white label text on top
+     clears WCAG AA (4.5:1). */
+  .lux-gradient {
+    background-image: linear-gradient(
+      135deg,
+      hsl(38 58% 48%) 0%,
+      hsl(34 62% 36%) 45%,
+      hsl(28 55% 28%) 100%
+    );
   }
-  body {
-    @apply bg-background text-foreground;
+
+  /* Dark ink for labels sitting on .lux-gradient — white would only reach
+     2.95:1 against the lightest gold stop; ink reaches 6.34:1 (WCAG AA). */
+  .lux-ink {
+    color: hsl(28 30% 12%);
+  }
+
+  .lux-gradient-text {
+    background-image: linear-gradient(
+      135deg,
+      hsl(38 70% 66%) 0%,
+      hsl(30 58% 48%) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Subtle premium border for cards/panels */
+  .lux-border {
+    border-color: hsl(var(--border));
+    box-shadow:
+      0 1px 2px 0 hsl(30 12% 8% / 0.04),
+      0 8px 24px -12px hsl(30 12% 8% / 0.12);
+  }
+
+  .dark .lux-border {
+    box-shadow:
+      0 1px 2px 0 hsl(0 0% 0% / 0.4),
+      0 12px 32px -16px hsl(0 0% 0% / 0.7);
+  }
+
+  /* Soft focus ring */
+  .focus-lux {
+    outline: none;
+  }
+  .focus-lux:focus-visible {
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--ring) / 0.45);
   }
 }

@@ -41,13 +41,13 @@ export function FloatingPromptBox({
   }, [value]);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-4rem)] max-w-4xl">
+    <div className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl -translate-x-1/2 sm:bottom-6 sm:w-[calc(100%-4rem)]">
       {/* Outer luxury container */}
-      <div className="bg-slate-100/80 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/80 shadow-lg flex flex-col gap-2">
+      <div className="lux-border flex flex-col gap-2 rounded-2xl border border-border bg-muted/70 p-1.5 backdrop-blur-xl">
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-1">
           <select
-            className="text-xs bg-transparent border-none focus:ring-0 text-muted-foreground font-medium"
+            className="focus:ring-0 cursor-pointer border-none bg-transparent text-xs font-medium text-muted-foreground focus-lux"
             defaultValue="Quick"
           >
             <option>Quick</option>
@@ -58,17 +58,18 @@ export function FloatingPromptBox({
           <div className="flex items-center gap-1">
             <button
               onClick={() => setShowMore(!showMore)}
-              className="p-1.5 rounded-lg hover:bg-slate-200 text-muted-foreground transition-colors"
+              className="flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-lux"
+              aria-label="ตัวเลือกเพิ่มเติม"
             >
-              <MoreVertical className="w-4 h-4" />
+              <MoreVertical className="h-4 w-4" />
             </button>
           </div>
         </div>
 
         {/* Inner card */}
-        <div className="bg-white rounded-xl border border-slate-200 p-3 relative overflow-hidden">
-          {/* Gradient accent top */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600" />
+        <div className="relative overflow-hidden rounded-xl border border-border bg-card p-3">
+          {/* Signature gold accent line */}
+          <div className="lux-gradient absolute inset-x-0 top-0 h-px" />
 
           <form onSubmit={onSend} className="flex items-end gap-3">
             <textarea
@@ -77,8 +78,8 @@ export function FloatingPromptBox({
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               onInput={autoResize}
-              placeholder="Ask a question..."
-              className="flex-1 resize-none border-none focus:ring-0 bg-transparent text-sm text-foreground min-h-[44px] max-h-[120px] leading-6 placeholder-text-muted-foreground"
+              placeholder="ถามอะไรก็ได้..."
+              className="min-h-[44px] max-h-[120px] flex-1 resize-none border-none bg-transparent text-sm leading-6 text-foreground placeholder:text-muted-foreground focus:ring-0 focus:outline-none"
               disabled={disabled}
               rows={1}
             />
@@ -95,29 +96,29 @@ export function FloatingPromptBox({
                   input.accept=".pdf,.csv,.txt,.md,.json";
                   input.click();
                 }}
-                className="p-2 rounded-lg hover:bg-slate-100 text-muted-foreground transition-colors disabled:opacity-50"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-lux disabled:opacity-50"
               >
-                <Paperclip className="w-4 h-4" />
+                <Paperclip className="h-4 w-4" />
               </button>
 
               <button
                 type="submit"
                 disabled={disabled || !value.trim()}
                 className={cn(
-                  "px-5 py-2.5 rounded-lg font-medium whitespace-nowrap transition-all duration-200 flex items-center gap-2",
+                  "flex items-center gap-2 whitespace-nowrap rounded-lg px-5 py-2.5 font-medium transition-all duration-200 focus-lux",
                   disabled || !value.trim()
-                    ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                    : "bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 text-white shadow-lg hover:shadow-purple-500/50 transform hover:scale-[1.02]"
+                    ? "cursor-not-allowed bg-muted text-muted-foreground"
+                    : "lux-gradient lux-ink shadow-lg hover:brightness-110"
                 )}
               >
                 {loading ? (
                   <span className="flex items-center gap-1.5">
-                    <span className="w-3 h-3 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    <span className="h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                     กำลังส่ง...
                   </span>
                 ) : (
                   <>
-                    <SendHorizontal className="w-4 h-4" />
+                    <SendHorizontal className="h-4 w-4" />
                     ส่ง
                   </>
                 )}

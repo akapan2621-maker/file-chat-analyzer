@@ -5,6 +5,7 @@ import { useWorkspace, ChatMessage, ChatSession } from "@/components/WorkspaceCo
 import { ChatMessage as ChatMessageComponent } from "@/components/ChatMessage";
 import { FloatingPromptBox } from "@/components/FloatingPromptBox";
 import { Sparkles, Bot, User as UserIcon } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void }) {
   const { getActiveChat, activeChatId, setActiveChatId, addChatSession, updateChatSession, spaces, llmConfig } = useWorkspace();
@@ -144,13 +145,13 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
   return (
     <div className="flex-1 flex flex-col bg-background relative z-10">
       {/* Header */}
-      <header className="h-16 border-b border-border bg-card/95 backdrop-blur flex items-center justify-between px-6 z-20">
+      <header className="z-20 flex h-16 items-center justify-between border-b border-border bg-card/80 px-6 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 flex items-center justify-center text-white">
-            <Bot className="w-5 h-5" />
+          <div className="lux-gradient flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-sm">
+            <Bot className="h-4 w-4" />
           </div>
           <div>
-            <h1 className="text-lg font-semibold text-foreground">
+            <h1 className="text-base font-semibold tracking-tight text-foreground">
               {active?.title || "แชทใหม่"}
             </h1>
             <p className="text-xs text-muted-foreground">
@@ -160,37 +161,36 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-accent rounded-lg text-muted-foreground transition-colors">
-            <Sparkles className="w-5 h-5" />
-          </button>
+          <ThemeToggle />
           <button
             onClick={onOpenLLMSettings}
-            className="p-2 hover:bg-accent rounded-lg text-muted-foreground transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-lux"
+            title="ตั้งค่า LLM"
           >
-            <UserIcon className="w-5 h-5" />
+            <UserIcon className="h-4 w-4" />
           </button>
         </div>
       </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto p-6 relative" ref={messagesEndRef}>
+      <main className="relative flex-1 overflow-y-auto px-6 pb-40 pt-6" ref={messagesEndRef}>
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-indigo-600 flex items-center justify-center text-2xl mb-4">
-              <Sparkles className="w-8 h-8" />
+          <div className="flex h-full flex-col items-center justify-center text-center">
+            <div className="lux-gradient mb-5 flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-lg">
+              <Sparkles className="h-6 w-6" />
             </div>
-            <h2 className="text-3xl font-light text-foreground mb-2 tracking-tight">
+            <h2 className="lux-gradient-text mb-2 text-2xl font-light tracking-tight">
               Ready when you are, Akapan.
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               เริ่มต้นโดยส่งข้อความหรืออัปโหลดไฟล์
             </p>
           </div>
         )}
 
         {error && (
-          <div className="flex items-center justify-center h-full">
-            <div className="bg-red-50 border border-red-100 text-red-700 px-4 py-3 rounded-lg max-w-md">
+          <div className="flex h-full items-center justify-center">
+            <div className="lux-border max-w-md rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
               {error}
             </div>
           </div>

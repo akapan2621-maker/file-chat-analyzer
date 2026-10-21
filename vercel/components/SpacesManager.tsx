@@ -125,7 +125,7 @@ export function SpacesManager({ onClose }: { onClose: () => void }) {
       <div className="relative w-full max-w-4xl h-[600px] bg-card border border-border rounded-2xl shadow-2xl p-6 animate-in fade-in zoom-in duration-300 flex flex-col">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-600" />
+            <Sparkles className="h-5 w-5 text-primary" />
             Spaces - ฐานความรู้
           </h2>
           <button onClick={onClose} className="p-2 hover:bg-accent rounded-lg text-muted-foreground">
@@ -180,7 +180,7 @@ export function SpacesManager({ onClose }: { onClose: () => void }) {
                       deleteSpace(space.id);
                       if (selectedSpaceId === space.id) setSelectedSpaceId(null);
                     }}
-                    className="p-1 hover:text-red-500"
+                    className="p-1 hover:text-destructive"
                   >
                     <Trash2 className="w-3 h-3" />
                   </button>
@@ -255,7 +255,7 @@ export function SpacesManager({ onClose }: { onClose: () => void }) {
                             ) : (
                               <button
                                 onClick={() => handleDeleteDoc(doc.id)}
-                                className="p-1.5 hover:text-red-500"
+                                className="p-1.5 hover:text-destructive"
                               >
                                 <Trash2 className="w-4 h-4" />
                               </button>
