@@ -59,7 +59,7 @@ export interface ChatSession {
 
 const DEFAULT_LLM_CONFIG: LLMConfig = {
   provider: "kilo",
-  baseUrl: "https://api.kilocode.ai/v1",
+  baseUrl: "https://api.kilo.ai/api/gateway",
   apiKey: "",
   modelId: "kilo-auto/free",
   temperature: 0.7,
@@ -77,15 +77,18 @@ interface WorkspaceContextType {
   llmConfig: LLMConfig;
   setLLMConfig: (config: Partial<LLMConfig>) => void;
   spaces: Space[];
-  addSpace: (space: Omit<Space, "id" | "createdAt">) => void;
+  addSpace: (space: Omit<Space, "id" | "createdAt">) => Space;
   updateSpace: (id: string, updates: Partial<Space>) => void;
   deleteSpace: (id: string) => void;
   documents: Document[];
-  addDocument: (doc: Omit<Document, "id" | "createdAt">) => void;
+  addDocument: (doc: Omit<Document, "id" | "createdAt">) => Document;
   deleteDocument: (id: string) => void;
   chatSessions: ChatSession[];
-  addChatSession: (session: Omit<ChatSession, "id" | "createdAt" | "updatedAt">) => void;
-  updateChatSession: (id: string, updates: Partial<ChatSession>) => void;
+  addChatSession: (session: Omit<ChatSession, "id" | "createdAt" | "updatedAt">) => ChatSession;
+  updateChatSession: (
+    id: string,
+    updates: Partial<ChatSession> | ((prev: ChatSession) => Partial<ChatSession>)
+  ) => void;
   deleteChatSession: (id: string) => void;
   getActiveChat: () => ChatSession | undefined;
   setActiveChatId: (id: string | null) => void;
@@ -179,20 +182,21 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const deleteDocument = useCallback((id: string) => {
-    setDocuments((prev) => {
-      const doc = prev.find((d) => d.id === id);
-      if (doc) {
-        setSpaces((prev) =>
-          prev.map((s) =>
-            s.id === doc.spaceId
-              ? { ...s, documentCount: Math.max(0, s.documentCount - 1) }
-              : s
-          )
-        );
-      }
-      return prev.filter((d) => d.id !== id);
-    });
-  }, []);
+    // Resolve the document OUTSIDE the state updater. Calling setSpaces from
+    // inside a setDocuments updater double-fires under StrictMode and
+    // decrements the space document count twice.
+    const doc = documents.find((d) => d.id === id);
+    setDocuments((prev) => prev.filter((d) => d.id !== id));
+    if (doc) {
+      setSpaces((prev) =>
+        prev.map((s) =>
+          s.id === doc.spaceId
+            ? { ...s, documentCount: Math.max(0, s.documentCount - 1) }
+            : s
+        )
+      );
+    }
+  }, [documents]);
 
   // Chat Sessions
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
@@ -228,13 +232,21 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
-  const updateChatSession = useCallback((id: string, updates: Partial<ChatSession>) => {
-    setChatSessions((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, ...updates, updatedAt: Date.now() } : s
-      )
-    );
-  }, []);
+  const updateChatSession = useCallback(
+    (
+      id: string,
+      updates: Partial<ChatSession> | ((prev: ChatSession) => Partial<ChatSession>)
+    ) => {
+      setChatSessions((prev) =>
+        prev.map((s) => {
+          if (s.id !== id) return s;
+          const patch = typeof updates === "function" ? updates(s) : updates;
+          return { ...s, ...patch, updatedAt: Date.now() };
+        })
+      );
+    },
+    []
+  );
 
   const deleteChatSession = useCallback((id: string) => {
     setChatSessions((prev) => prev.filter((s) => s.id !== id));

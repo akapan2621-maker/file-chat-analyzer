@@ -7,7 +7,7 @@ import { FloatingPromptBox } from "@/components/FloatingPromptBox";
 import { Sparkles, Bot, User as UserIcon } from "lucide-react";
 
 export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void }) {
-  const { getActiveChat, activeChatId, setActiveChatId, chatSessions, addChatSession, updateChatSession, spaces } = useWorkspace();
+  const { getActiveChat, activeChatId, setActiveChatId, addChatSession, updateChatSession, spaces, llmConfig } = useWorkspace();
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -57,19 +57,20 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
     // Ensure active chat exists
     let active = getActiveChat();
     if (!active || active.id === "new") {
-      addChatSession({
+      // addChatSession returns the created session — use it directly.
+      // Do NOT read chatSessions[0]: that array is stale in this closure and
+      // would point at a previous session (or undefined) right after creation.
+      active = addChatSession({
         title: input.slice(0, 50) || "แชทใหม่",
         messages: [userMessage],
       });
-      // Find the newly created session
-      active = chatSessions[0];
-      if (active) {
-        setActiveChatId(active.id);
-      }
+      setActiveChatId(active.id);
     } else {
-      updateChatSession(active.id, {
-        messages: [...(active.messages || []), userMessage],
-      });
+      // Functional update: read the LATEST messages from state instead of the
+      // stale `active` snapshot, otherwise concurrent sends drop messages.
+      updateChatSession(active.id, (prev) => ({
+        messages: [...(prev.messages || []), userMessage],
+      }));
     }
 
     try {
@@ -79,16 +80,24 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: input,
-          modelId: "kilo-auto/free",
-          temperature: 0.7,
-          systemPrompt: "",
-          apiKey: "",
-          baseUrl: "https://api.kilocode.ai/v1",
+          modelId: llmConfig.modelId,
+          temperature: llmConfig.temperature,
+          systemPrompt: llmConfig.systemPrompt,
+          apiKey: llmConfig.apiKey,
+          baseUrl: llmConfig.baseUrl,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Server error");
+        // Surface the server's actual error message (e.g. missing API key, LLM error)
+        let detail = `Server error (${response.status})`;
+        try {
+          const errBody = await response.json();
+          if (errBody?.error) detail = errBody.error;
+        } catch {
+          // non-JSON error body — keep the generic message
+        }
+        throw new Error(detail);
       }
 
       const reader = response.body?.getReader();
@@ -117,9 +126,11 @@ export function ChatView({ onOpenLLMSettings }: { onOpenLLMSettings: () => void 
       setLoading(false);
 
       if (active) {
-        updateChatSession(active.id, {
-          messages: [...(active.messages || []), userMessage, assistantMessage],
-        });
+        // Append only the assistant message. The user message was already
+        // added above; re-adding it here would duplicate it in the history.
+        updateChatSession(active.id, (prev) => ({
+          messages: [...(prev.messages || []), assistantMessage],
+        }));
       }
     } catch (err: any) {
       setError(err.message || "เกิดข้อผิดพลาด");

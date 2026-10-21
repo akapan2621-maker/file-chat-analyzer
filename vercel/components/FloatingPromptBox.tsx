@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useRef, FormEvent } from "react";
+import React, { useState, useRef, useEffect, FormEvent } from "react";
 import { Paperclip, Send, MoreVertical, SendHorizontal } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FloatingPromptBoxProps {
   value: string;

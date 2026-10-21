@@ -23,7 +23,7 @@ import { useWorkspace, Space, ChatSession } from "@/components/WorkspaceContext"
 import { cn } from "@/lib/utils";
 
 export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
-  const { spaces, addSpace, deleteSpace, chatSessions, activeChatId, setActiveChatId } = useWorkspace();
+  const { spaces, addSpace, deleteSpace, chatSessions, activeChatId, setActiveChatId, deleteChatSession } = useWorkspace();
   const [collapsed, setCollapsed] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState("");
 

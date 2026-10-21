@@ -15,7 +15,7 @@ import { useWorkspace, LLMConfig, ProviderType } from "@/components/WorkspaceCon
 import { cn } from "@/lib/utils";
 
 const PROVIDERS: { id: ProviderType; name: string; description: string; defaultBaseUrl: string }[] = [
-  { id: "kilo", name: "Kilo Code AI Gateway", description: "OpenAI-Compatible Gateway (Default)", defaultBaseUrl: "https://api.kilocode.ai/v1" },
+  { id: "kilo", name: "Kilo Code AI Gateway", description: "OpenAI-Compatible Gateway (Default)", defaultBaseUrl: "https://api.kilo.ai/api/gateway" },
   { id: "custom", name: "Custom OpenAI-Compatible Endpoint", description: "ตั้งค่า endpoint เอง", defaultBaseUrl: "" },
   { id: "gemini", name: "Google Gemini Direct", description: "เชื่อมต่อ Gemini โดยตรง", defaultBaseUrl: "https://generativelanguage.googleapis.com/v1beta" },
   { id: "groq", name: "Groq", description: "ความเร็วสูง ต้นทุนต่ำ", defaultBaseUrl: "https://api.groq.com/openai/v1" },
