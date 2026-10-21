@@ -1,13 +1,21 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-export const metadata = {
-  title: "File Chat Analyzer",
-  description: "จัดการไฟล์และแชทกับ AI รองรับภาษาไทย",
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
+export const metadata: Metadata = {
+  title: "AI Workspace",
+  description: "Minimalist Luxury AI Workspace & RAG Knowledge Base",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="th">
+    <html lang="th" className={inter.variable}>
       <body>{children}</body>
     </html>
   );
