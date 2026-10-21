@@ -169,8 +169,10 @@ export function LLMSettingsModal({
               <button
                 onClick={handleTestConnection}
                 disabled={status === "testing"}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors"
-                className:hidden={false}
+                className={cn(
+                  "absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-colors",
+                  status === "testing" && "animate-spin"
+                )}
               >
                 {status === "testing" ? (
                   <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin text-primary" />

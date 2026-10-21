@@ -31,7 +31,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           ? "bg-primary text-white text-right rounded-tr-none rounded-tl-none"
           : "bg-card border border-border text-foreground rounded-bl-none rounded-tl-none"
       )}>
-        <div className="prose prose-sm :where(*)":{}>
+        <div className="prose prose-sm">
           {message.content}
         </div>
       </div>
