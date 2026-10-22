@@ -18,11 +18,18 @@ import {
   FileImage,
   BarChart3,
   Settings as SettingsIcon,
+  Workflow,
 } from "lucide-react";
 import { useWorkspace, Space, ChatSession } from "@/components/WorkspaceContext";
 import { cn } from "@/lib/utils";
 
-export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
+export function Sidebar({
+  onNewChat,
+  onOpenPipeline,
+}: {
+  onNewChat: () => void;
+  onOpenPipeline: () => void;
+}) {
   const { spaces, addSpace, deleteSpace, chatSessions, activeChatId, setActiveChatId, deleteChatSession } = useWorkspace();
   const [collapsed, setCollapsed] = useState(false);
   const [newSpaceName, setNewSpaceName] = useState("");
@@ -153,6 +160,14 @@ export function Sidebar({ onNewChat }: { onNewChat: () => void }) {
             เครื่องมือ
           </label>
           <div className="space-y-1">
+            <button
+              onClick={onOpenPipeline}
+              className={cn("w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-secondary text-foreground transition-colors focus-lux")}
+              title="Pipeline · INPUT → PROCESS → OUTPUT (ไม่ใช้ LLM)"
+            >
+              <Workflow className="w-5 h-5 text-muted-foreground" />
+              <span className={cn("text-sm", collapsed && "hidden")}>Pipeline</span>
+            </button>
             <button className={cn("w-full flex items-center gap-3 px-3 py-2 rounded-xl text-left hover:bg-secondary text-foreground transition-colors")}>
               <GraduationCap className="w-5 h-5 text-muted-foreground" />
               <span className={cn("text-sm", collapsed && "hidden")}>Research</span>

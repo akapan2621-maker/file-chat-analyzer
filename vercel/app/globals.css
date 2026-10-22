@@ -91,6 +91,17 @@
     font-feature-settings: "rlig" 1, "calt" 0, "curs" 0, "hlig" 0, "liga" 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Explicit fallback chain: Inter has no Thai or emoji glyphs, so Thai
+       text and the emoji used in the pipeline summary would render as tofu
+       on systems without a matching fallback font. */
+    font-family: var(--font-inter), "Noto Sans Thai", "Leelawadee UI",
+      "Sarabun", "IBM Plex Sans Thai", "Tahoma", "Apple Color Emoji",
+      "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
+
+  /* <pre> blocks default to a monospace stack that has no emoji/Thai. */
+  pre, code, kbd, samp {
+    font-family: inherit;
   }
 
   html {
